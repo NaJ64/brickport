@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\brickport-domain\brickport-domain.csproj" />
+    <ProjectReference Include="..\brickport-services\brickport-services.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>BrickPort.Infrastructure.Services.Domain</RootNamespace>
+  </PropertyGroup>
+
+</Project>
