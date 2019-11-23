@@ -2,7 +2,7 @@ using System;
 
 namespace BrickPort.Domain.PlayerActions
 {
-    public class BuildRoad : PlayerAction
+    public class BuildRoad : PlayerAction, IBuildAction
     {
         public (Tile Tile1, Tile Tile2) Location { get; }
         

@@ -7,49 +7,51 @@ namespace BrickPort.Domain
 {
     public class PlayerTurn
     {
-        private readonly Stack<PlayerAction> _preRollActions;
-        private RollDice _rollAction;
-        private readonly Stack<PlayerAction> _postRollActions;
+        private readonly Stack<IPreRollAction> _preRollActions;
+        private IRollAction _rollAction;
+        private readonly Stack<IPlayerAction> _postRollActions;
 
         public Guid Id { get; }
-        public PlayerColor PlayerColor { get; }
+        public PlayerColor Player { get; }
         public RollResult RollResult => _rollAction.RollResult;
-        public IReadOnlyList<PlayerAction> PreRollActions => _postRollActions.ToList();
-        public IReadOnlyList<PlayerAction> PostRollActions => _postRollActions.ToList();
-        public IReadOnlyList<PlayerAction> Actions => _preRollActions
-            .Concat(new PlayerAction[] { _rollAction })
+        public IReadOnlyList<IPreRollAction> PreRollActions => _preRollActions.ToList();
+        public IReadOnlyList<IPlayerAction> PostRollActions => _postRollActions.ToList();
+        public virtual IReadOnlyList<IPlayerAction> Actions => _preRollActions.Cast<IPlayerAction>()
+            .Concat(new IRollAction[] { _rollAction })
             .Concat(_postRollActions).ToList();
 
         public PlayerTurn(
-            PlayerColor playerColor, 
-            IList<PlayerAction> preRollActions = null,
-            RollDice rollAction = null,
-            IList<PlayerAction> postRollActions = null
-        ) : this(Guid.NewGuid(), playerColor, preRollActions, rollAction, postRollActions) { }
+            PlayerColor player, 
+            IList<IPreRollAction> preRollActions = null,
+            IRollAction roll = null,
+            IList<IPlayerAction> postRollActions = null,
+            bool hasEnded = false
+        ) : this(Guid.NewGuid(), player, preRollActions, roll, postRollActions, hasEnded) { }
         
         public PlayerTurn(
             Guid id, 
-            PlayerColor playerColor, 
-            IList<PlayerAction> preRollActions = null,
-            RollDice rollAction = null,
-            IList<PlayerAction> postRollActions = null
+            PlayerColor player, 
+            IList<IPreRollAction> preRollActions = null,
+            IRollAction roll = null,
+            IList<IPlayerAction> postRollActions = null,
+            bool hasEnded = false
         ) 
         {
             Id = id;
-            PlayerColor = playerColor;
-            _preRollActions = new Stack<PlayerAction>(preRollActions?.ToList() ?? new List<PlayerAction>());
-            _rollAction = rollAction;
-            _postRollActions = new Stack<PlayerAction>(postRollActions?.ToList() ?? new List<PlayerAction>());
+            Player = player;
+            _preRollActions = new Stack<IPreRollAction>(preRollActions?.ToList() ?? new List<IPreRollAction>());
+            _rollAction = roll;
+            _postRollActions = new Stack<IPlayerAction>(postRollActions?.ToList() ?? new List<IPlayerAction>());
         }
 
-        public void PlayDevelopmentCard(UseDevelopmentCard playerAction)
+        public virtual void UseDevelopmentCard(IUseDevelopmentCardAction playerAction)
         {
             // Ensure we are allowed to play this card
-            var cardType = playerAction.DevelopmentCardType;
+            var cardType = playerAction.CardType;
             var cardsPlayed = _preRollActions
-                .Where(x => x.GetType().IsAssignableFrom(typeof(UseDevelopmentCard)))
-                .Cast<UseDevelopmentCard>()
-                .Where(x => x.DevelopmentCardType.Equals(cardType) && x.PlayerColor.Equals(playerAction.PlayerColor))
+                .Where(x => x is IUseDevelopmentCardAction)
+                .Cast<IUseDevelopmentCardAction>()
+                .Where(x => x.CardType.Equals(cardType) && x.Player.Equals(playerAction.Player))
                 .Count();
             if (cardsPlayed > cardType.MaxPerTurn)
                 throw new ActionLimitReachedException(playerAction);
@@ -59,7 +61,7 @@ namespace BrickPort.Domain
                 _preRollActions.Push(playerAction);
         }
 
-        public void RollDice(RollDice roll) 
+        public virtual void RollDice(IRollAction roll) 
         {
             if (_rollAction != null)
                 throw new ActionLimitReachedException(roll);
@@ -68,25 +70,29 @@ namespace BrickPort.Domain
             _rollAction = roll;
         }
 
-        public void AddAction(PlayerAction playerAction)
+        public virtual void Add(IPlayerAction playerAction)
         {
-            if (playerAction.GetType().IsAssignableFrom(typeof(UseDevelopmentCard)))
+            if (playerAction is IUseDevelopmentCardAction)
             {
-                PlayDevelopmentCard(playerAction as UseDevelopmentCard);
+                UseDevelopmentCard(playerAction as UseDevelopmentCard);
                 return;
             }
-            if (playerAction.GetType().IsAssignableFrom(typeof(RollDice)))
+            if (playerAction is IRollAction)
             {
                 RollDice(playerAction as RollDice);
                 return;
             }
             if (_rollAction == null) 
-                _preRollActions.Push(playerAction);
+            {
+                if (!(playerAction is IPreRollAction))
+                    throw new InvalidOperationException($"Action ({playerAction.Description}) must be performed after roll");
+                _preRollActions.Push(playerAction as IPreRollAction);
+            }
             else
                 _postRollActions.Push(playerAction);
         }
 
-        public void UndoAction()
+        public virtual void Undo()
         {
             if (_postRollActions.Any())
                 _postRollActions.Pop();
@@ -100,9 +106,68 @@ namespace BrickPort.Domain
 
     }
 
+    public class PlayerTurnWithSpecialBuildPhase : PlayerTurn
+    {
+        private readonly Stack<ISpecialBuildPhaseEligibleAction> _specialBuildActions;
+        private bool SpecialBuildPhaseActive => _specialBuildActions.Any();
+
+        public IReadOnlyList<ISpecialBuildPhaseEligibleAction> SpecialBuildPhaseActions => _specialBuildActions.ToList();
+        public override IReadOnlyList<IPlayerAction> Actions => base.Actions
+            .Concat(_specialBuildActions)
+            .ToList();
+
+        public PlayerTurnWithSpecialBuildPhase(
+            PlayerColor player, 
+            IList<IPreRollAction> preRollActions = null,
+            IRollAction roll = null,
+            IList<IPlayerAction> postRollActions = null,
+            IList<ISpecialBuildPhaseEligibleAction> specialBuildActions = null
+        ) : base(player, preRollActions, roll, postRollActions) =>
+            _specialBuildActions = new Stack<ISpecialBuildPhaseEligibleAction>(specialBuildActions?.ToList() 
+                ?? new List<ISpecialBuildPhaseEligibleAction>());
+        
+        public override void Add(IPlayerAction playerAction)
+        {
+            if (SpecialBuildPhaseActive && playerAction.Player.Equals(Player))
+                throw new SpecialBuildPhaseException(playerAction);
+
+            if (Player.Equals(playerAction.Player))
+                base.Add(playerAction);
+            else 
+            {
+                if (!(playerAction is ISpecialBuildPhaseEligibleAction)) 
+                    throw new SpecialBuildPhaseException(playerAction);
+                _specialBuildActions.Push(playerAction as ISpecialBuildPhaseEligibleAction);
+            }
+        }
+
+        public override void Undo()
+        {
+            if (_specialBuildActions.Any())
+                _specialBuildActions.Pop();
+            else 
+                base.Undo();
+        }
+
+        public override void UseDevelopmentCard(IUseDevelopmentCardAction playerAction)
+        {
+            if (_specialBuildActions.Any())
+                throw new SpecialBuildPhaseException(playerAction);
+            else
+                base.UseDevelopmentCard(playerAction);
+        }
+
+    }
+
     public class ActionLimitReachedException : InvalidOperationException 
     {
-        public ActionLimitReachedException(PlayerAction playerAction) 
+        public ActionLimitReachedException(IPlayerAction playerAction) 
             : base($"Action ({playerAction.Description}) cannot be performed again this turn") { }
+    }
+    
+    public class SpecialBuildPhaseException : InvalidOperationException 
+    {
+        public SpecialBuildPhaseException(IPlayerAction playerAction) 
+            : base($"Action ({playerAction.Description}) cannot be performed during the special build phase") { }
     }
 }

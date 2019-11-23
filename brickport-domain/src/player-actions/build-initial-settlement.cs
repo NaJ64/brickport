@@ -2,7 +2,7 @@ using System;
 
 namespace BrickPort.Domain.PlayerActions
 {
-    public class BuildInitialSettlement : BuildSettlement
+    public class BuildInitialSettlement : BuildSettlement, IPreGameAction
     {
         public int Turn { get; }
         public bool AwardResources { get; }

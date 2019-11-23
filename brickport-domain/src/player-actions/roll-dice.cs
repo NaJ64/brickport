@@ -2,7 +2,7 @@ using System;
 
 namespace BrickPort.Domain.PlayerActions
 {
-    public class RollDice : PlayerAction
+    public class RollDice : PlayerAction, IRollAction
     {
         public RollResult RollResult { get; }
         
