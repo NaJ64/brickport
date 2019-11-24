@@ -5,7 +5,16 @@ using BrickPort.Domain.PlayerActions;
 
 namespace BrickPort.Domain
 {
-    public class PlayerTurn
+    public interface IPlayerTurn
+    {
+        PlayerColor Player { get; }
+        RollResult RollResult { get; }
+        IReadOnlyList<IPlayerAction> Actions { get; }
+        void Add(IPlayerAction action);
+        void Undo();
+    }
+
+    public class PlayerTurn : IPlayerTurn
     {
         private readonly Stack<IPreRollAction> _preRollActions;
         private IRollAction _rollAction;
