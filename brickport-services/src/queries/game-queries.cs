@@ -22,7 +22,8 @@ namespace BrickPort.Services.Queries
 
     public interface IGameQueries
     {
-        Task<GameSummary> Summary(string id);
+        Task<IEnumerable<GameSummary>> SummaryAsync();
+        Task<GameSummary> SummaryAsync(string id);
         Task<IEnumerable<GameSummary>> SummaryByDateAsync(DateTime? startUtc, DateTime? endUtc);
     }
 }

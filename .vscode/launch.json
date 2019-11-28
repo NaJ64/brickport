@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/brickport-web/bin/Debug/netcoreapp3.0/brickport-web.dll",
+            "program": "${workspaceFolder}/brickport-web/dotnet/bin/Debug/netcoreapp3.0/brickport-web.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/brickport-web",
+            "cwd": "${workspaceFolder}/brickport-web/dotnet",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {
