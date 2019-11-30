@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/brickport-web/dotnet/brickport-web.csproj",
+                "${workspaceFolder}/brickport-web/brickport-web.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/brickport-web/dotnet/brickport-web.csproj",
+                "${workspaceFolder}/brickport-web/brickport-web.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -32,7 +32,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/brickport-web/dotnet/brickport-web.csproj",
+                "${workspaceFolder}/brickport-web/brickport-web.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
