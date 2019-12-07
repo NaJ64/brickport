@@ -6,18 +6,18 @@ namespace BrickPort.Services.Queries
 {
     public class GameSummary
     {
-        string Id { get; }
-        DateTime DateUtc { get; }
-        string Winner { get; }
-        PlayerScoreSummary[] PlayerScores { get; }
+        public string Id { get; set; }
+        public DateTime DateUtc { get; set; }
+        public string Winner { get; set; }
+        public PlayerScoreSummary[] PlayerScores { get; set; }
     }
 
     public class PlayerScoreSummary 
     {
-        public string PlayerId { get; }
-        public string PlayerName { get; }
-        public string Color { get; }
-        public int VictoryPoints { get; }
+        public string PlayerId { get; set; }
+        public string PlayerName { get; set; }
+        public string Color { get; set; }
+        public int VictoryPoints { get; set; }
     }
 
     public interface IGameQueries

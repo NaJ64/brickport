@@ -24,8 +24,8 @@ namespace BrickPort.Web.Controllers
         }
         
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<GameSummary>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAsync()
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<GameSummary>>> GetAsync()
         {
             try
             {
