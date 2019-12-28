@@ -1,4 +1,5 @@
 using System;
+using BrickPort.Infrastructure.Services.InMemory;
 using BrickPort.Infrastructure.Services.InMemory.Commands;
 using BrickPort.Infrastructure.Services.InMemory.Queries;
 using BrickPort.Services.Commands;
@@ -58,10 +59,11 @@ namespace BrickPort.Infrastructure.DependencyInjection
             // Create new options instance
             var inMemoryServiceOptions = new BrickPortInMemoryServiceOptions();
             configureOptions?.Invoke(inMemoryServiceOptions);
+            services.AddSingleton<InMemoryDataStore>();
             if (inMemoryServiceOptions.UseCommands)
-                services.AddSingleton<ICreateGameHandler>(new InMemoryCreateGameHandler());
+                services.AddSingleton<ICreateGameHandler, InMemoryCreateGameHandler>();
             if (inMemoryServiceOptions.UseQueries)
-                services.AddSingleton<IGameQueries>(new InMemoryGameQueries());
+                services.AddSingleton<IGameQueries, InMemoryGameQueries>();
             return services;
         }
     }

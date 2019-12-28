@@ -55,7 +55,10 @@ namespace BrickPort.Web.Controllers
             {
                 if (ex is KeyNotFoundException)
                     return ex.ToNotFound();
-                if (ex is FormatException || ex is ArgumentNullException)
+                if (ex is FormatException || 
+                    ex is ArgumentException || 
+                    ex is ArgumentNullException || 
+                    ex is ArgumentOutOfRangeException)
                     return ex.ToBadRequest();
                 return ex.ToInternalServerError();
             }
@@ -65,7 +68,7 @@ namespace BrickPort.Web.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> PostAsync(CreateGameCommand command)
+        public async Task<ActionResult<int>> PostAsync([FromBody]CreateGameCommand command)
         {
             try 
             {
@@ -74,7 +77,10 @@ namespace BrickPort.Web.Controllers
             }
             catch(Exception ex)
             {
-                if (ex is FormatException || ex is ArgumentNullException)
+                if (ex is FormatException ||
+                    ex is ArgumentException || 
+                    ex is ArgumentNullException || 
+                    ex is ArgumentOutOfRangeException)
                     return ex.ToBadRequest();
                 return ex.ToInternalServerError();
             }
