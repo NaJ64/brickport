@@ -17,7 +17,13 @@ namespace BrickPort.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services) => services
             .AddBrickPortWeb()
-            .AddControllers();
+            .AddSwaggerDocument(configure => 
+            {
+                configure.Version = "v1";
+                configure.Title = "brickport";
+                configure.Description = "Web API for brickport catan tracking companion";
+            })
+            .AddControllers(); // Register the Swagger services
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -30,6 +36,10 @@ namespace BrickPort.Web
             app.UseRouting();
 
             app.UseStaticFiles();
+
+            // Register the Swagger generator and the Swagger UI middlewares
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }

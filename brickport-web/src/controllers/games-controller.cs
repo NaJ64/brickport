@@ -25,6 +25,7 @@ namespace BrickPort.Web.Controllers
         
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<GameSummary>>> GetAsync()
         {
             try
@@ -38,11 +39,11 @@ namespace BrickPort.Web.Controllers
             }
         }
         
-        [Route("{id:guid}")]
-        [HttpGet]
+        [HttpGet("/{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<GameSummary>> GetAsync(string id)
         {
             try
@@ -60,8 +61,10 @@ namespace BrickPort.Web.Controllers
             }
         }
 
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<int>> PostAsync(CreateGameCommand command)
         {
             try 

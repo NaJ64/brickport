@@ -5,6 +5,10 @@
     <ProjectReference Include="..\brickport-infrastructure\brickport-infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="NSwag.AspNetCore" Version="13.2.0" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <RootNamespace>BrickPort.Web</RootNamespace>
