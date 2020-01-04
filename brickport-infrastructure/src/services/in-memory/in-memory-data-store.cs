@@ -8,6 +8,7 @@ namespace BrickPort.Infrastructure.Services.InMemory
 {
     public class InMemoryDataStore
     {
+        private readonly List<string> _validColors;
         private readonly List<GameSummary> _games;
         private readonly Dictionary<string, string> _playerNames;
         private readonly Dictionary<string, string> _playerIds;
@@ -15,10 +16,12 @@ namespace BrickPort.Infrastructure.Services.InMemory
         public InMemoryDataStore() 
         {
             _games = CreateGames();
+            _validColors = new List<string> { "Blue", "Red", "Orange", "White", "Brown", "Green" };
             _playerIds = new Dictionary<string, string>();
             _playerNames = new Dictionary<string, string>();
         }
         
+        public IReadOnlyCollection<string> ValidColors => _validColors;
         public IReadOnlyCollection<GameSummary> Games => _games;
         public IReadOnlyCollection<(string, string)> Players => _playerIds.Select(x => (x.Key, x.Value)).ToList();
 
@@ -34,7 +37,7 @@ namespace BrickPort.Infrastructure.Services.InMemory
 
         public string GetPlayerId(string playerName)
         {
-            if (!_playerNames.ContainsValue(playerName))
+            if (!_playerNames.ContainsKey(playerName))
                 return null;
                 //throw new KeyNotFoundException($"Could not locate player with name {playerName}");
             return _playerNames[playerName];

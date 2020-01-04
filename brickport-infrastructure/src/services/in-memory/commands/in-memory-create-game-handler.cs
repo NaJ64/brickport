@@ -20,6 +20,10 @@ namespace BrickPort.Infrastructure.Services.InMemory.Commands
                 throw new ArgumentOutOfRangeException(nameof(command.Players), "Player count must be between 3 and 6");
             if (command.Players.GroupBy(x => x.PlayerName).Any(x => x.Count() > 1))
                 throw new ArgumentException(nameof(command.Players), "Players must be unique");
+            if (command.Players.GroupBy(x => x.Color).Any(x => x.Count() > 1))
+                throw new ArgumentException(nameof(command.Players), "Player colors must be unique");
+            if (command.Players.GroupBy(x => x.Color).Any(x => !_dataStore.ValidColors.Contains(x.Key)))
+                throw new ArgumentException(nameof(command.Players), $"Player colors must be: {string.Join(", ", _dataStore.ValidColors)}");
             var newGameSummary = new GameSummary()
             {
                 Id = Guid.NewGuid().ToString(),

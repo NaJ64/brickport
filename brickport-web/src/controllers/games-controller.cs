@@ -23,7 +23,7 @@ namespace BrickPort.Web.Controllers
             _createGameHandler = createGameHandler;
         }
         
-        [HttpGet]
+        [HttpGet, ActionName("Get")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<GameSummary>>> GetAsync()
@@ -39,7 +39,7 @@ namespace BrickPort.Web.Controllers
             }
         }
         
-        [HttpGet("/{id:guid}")]
+        [HttpGet("{id:guid}"), ActionName("GetById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -64,7 +64,7 @@ namespace BrickPort.Web.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Post")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -73,7 +73,7 @@ namespace BrickPort.Web.Controllers
             try 
             {
                 var newGameId = await _createGameHandler.HandleAsync(command);
-                return CreatedAtAction(nameof(GetAsync), new { id = newGameId }, newGameId);
+                return CreatedAtAction("GetById", new { id = newGameId }, newGameId);
             }
             catch(Exception ex)
             {
