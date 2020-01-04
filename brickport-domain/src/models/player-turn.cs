@@ -15,7 +15,7 @@ namespace BrickPort.Domain.Models
         GameState Apply(GameState gameState);
     }
 
-    public abstract class PlayerTurn : IPlayerTurn
+    public class PlayerTurn : IPlayerTurn
     {
         private readonly Stack<IPreRollAction> _preRollActions;
         private IRollAction _rollAction;
@@ -54,7 +54,13 @@ namespace BrickPort.Domain.Models
             _postRollActions = new Stack<IPlayerAction>(postRollActions?.ToList() ?? new List<IPlayerAction>());
         }
 
-        public abstract GameState Apply(GameState gameState);
+        public GameState Apply(GameState gameState)
+        {
+            var newState = gameState.Clone();
+            foreach(var playerAction in Actions)
+                newState = playerAction.Apply(newState);
+            return newState;
+        }
 
         public virtual void UseDevelopmentCard(IUseDevelopmentCardAction playerAction)
         {
@@ -118,7 +124,7 @@ namespace BrickPort.Domain.Models
 
     }
 
-    public abstract class PlayerTurnWithSpecialBuildPhase : PlayerTurn
+    public class PlayerTurnWithSpecialBuildPhase : PlayerTurn
     {
         private readonly Stack<ISpecialBuildPhaseEligibleAction> _specialBuildActions;
         private bool SpecialBuildPhaseActive => _specialBuildActions.Any();
