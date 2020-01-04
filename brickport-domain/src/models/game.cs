@@ -36,7 +36,7 @@ namespace BrickPort.Domain.Models
             var gameState = _initialGameState;
             foreach(var turn in _turns) 
             {
-                // TODO:  Apply action to game and get new state
+                gameState = turn.Apply(gameState);
             }
             return gameState;
         }

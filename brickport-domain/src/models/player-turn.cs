@@ -13,6 +13,7 @@ namespace BrickPort.Domain.Models
         void Add(IPlayerAction action);
         void Undo();
         GameState Apply(GameState gameState);
+        // TODO:  GameState Revert(GameState gameState);
     }
 
     public class PlayerTurn : IPlayerTurn
