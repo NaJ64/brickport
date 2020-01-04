@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using BrickPort.Domain.Utilities;
 
 namespace BrickPort.Domain.Models.PlayerActions
@@ -25,6 +26,16 @@ namespace BrickPort.Domain.Models.PlayerActions
         {
             Location = location;
             StealFromPlayer = stealFromPlayer;
+        }
+
+        public override GameState Apply(GameState gameState)
+        {
+            var newState = gameState.Clone();
+            var stealFromPlayer = StealFromPlayer == null ? null : newState.Players
+                .Single(x => string.Equals(x.Color, StealFromPlayer.Color, StringComparison.OrdinalIgnoreCase));
+            if (stealFromPlayer != null)
+                stealFromPlayer.TotalCardsStolen += 1;
+            return newState;
         }
 
         public override string ToString()

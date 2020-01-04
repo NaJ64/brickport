@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using BrickPort.Domain.Utilities;
 
 namespace BrickPort.Domain.Models.PlayerActions
@@ -12,6 +13,16 @@ namespace BrickPort.Domain.Models.PlayerActions
 
         public BuildSettlement(Guid id, PlayerColor playerColor, (Tile Tile1, Tile Tile2, Tile Tile3) location) 
             : base(id, playerColor) => Location = location;
+
+        public override GameState Apply(GameState gameState)
+        {
+            var newState = gameState.Clone();
+            var player = newState.Players
+                .Single(x => string.Equals(x.Color, Player.Color, StringComparison.OrdinalIgnoreCase));
+            player.TotalSettlements += 1;
+            player.TotalPoints += 1;
+            return newState;
+        }
             
         public override string ToString() =>
             $"Player {Player.Name} built settlement on tiles:  " +

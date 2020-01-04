@@ -8,6 +8,7 @@ namespace BrickPort.Domain.Models
         int PointValue { get; }
         PlayerColor Player { get; }
         string Description { get; }
+        GameState Apply(GameState gameState);
     }
 
     public interface ISpecialBuildPhaseEligibleAction : IPlayerAction { }
@@ -51,6 +52,8 @@ namespace BrickPort.Domain.Models
             Player = player;
             PointValue = pointValue;
         }
+
+        public abstract GameState Apply(GameState gameState);
     }
 
     public abstract class TriggeredPlayerAction : PlayerAction, ITriggeredAction

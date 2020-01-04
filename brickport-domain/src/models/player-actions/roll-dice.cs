@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace BrickPort.Domain.Models.PlayerActions
 {
@@ -11,6 +12,15 @@ namespace BrickPort.Domain.Models.PlayerActions
 
         public RollDice(Guid id, PlayerColor playerColor, RollResult rollResult) 
             : base(id, playerColor) => RollResult = rollResult;
+            
+        public override GameState Apply(GameState gameState)
+        {
+            var newState = gameState.Clone();
+            var player = newState.Players
+                .Single(x => string.Equals(x.Color, Player.Color, StringComparison.OrdinalIgnoreCase));
+            player.RollHistory.Add(RollResult.Value);
+            return newState;
+        }
 
         public override string ToString() =>
             $"Player {Player.Name} rolls {RollResult.Value} ({RollResult.Die1} + {RollResult.Die2})";
