@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using BrickPort.Services.Commands;
 using BrickPort.Services.Queries;
 using BrickPort.Web.Utilities;
-using Microsoft.AspNetCore.Http;
 
 namespace BrickPort.Web.Controllers
 {

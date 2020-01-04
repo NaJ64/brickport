@@ -64,6 +64,8 @@ namespace BrickPort.Infrastructure.DependencyInjection
                 services.AddSingleton<ICreateGameHandler, InMemoryCreateGameHandler>();
             if (inMemoryServiceOptions.UseQueries)
                 services.AddSingleton<IGameQueries, InMemoryGameQueries>();
+            if (inMemoryServiceOptions.UseQueries)
+                services.AddSingleton<IPlayerQueries, InMemoryPlayerQueries>();
             return services;
         }
     }

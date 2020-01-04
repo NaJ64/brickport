@@ -14,7 +14,7 @@ namespace BrickPort.Infrastructure.Services.InMemory.Queries
 
         public async Task<IEnumerable<GameSummary>> SummaryAsync() => await Task.FromResult(_dataStore.Games);
 
-        public async Task<GameSummary> SummaryAsync(string id) => await Task.FromResult(_dataStore.Games.SingleOrDefault(summary => summary.Id == id));
+        public async Task<GameSummary> SummaryAsync(string id) => await Task.FromResult(_dataStore.Games.Single(summary => summary.Id == id));
 
         public async Task<IEnumerable<GameSummary>> SummaryByDateAsync(DateTime? startUtc, DateTime? endUtc) => await Task.FromResult(
             _dataStore.Games.Where(summary => 

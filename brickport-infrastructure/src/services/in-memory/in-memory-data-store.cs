@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using BrickPort.Services.Queries;
 
 namespace BrickPort.Infrastructure.Services.InMemory
@@ -19,6 +18,16 @@ namespace BrickPort.Infrastructure.Services.InMemory
             _validColors = new List<string> { "Blue", "Red", "Orange", "White", "Brown", "Green" };
             _playerIds = new Dictionary<string, string>();
             _playerNames = new Dictionary<string, string>();
+            var players = _games.SelectMany(game => game.PlayerScores.Select(x => new Player()
+            { 
+                PlayerId = x.PlayerId, 
+                PlayerName = x.PlayerName 
+            })).GroupBy(x => x.PlayerId).Select(x => x.First());
+            foreach(var player in players)
+            {
+                _playerIds[player.PlayerId] = player.PlayerName;
+                _playerNames[player.PlayerName] = player.PlayerId;
+            }
         }
         
         public IReadOnlyCollection<string> ValidColors => _validColors;
