@@ -17,12 +17,12 @@ namespace BrickPort.Domain.Models.PlayerActions
         {
             var newState = gameState.Clone();
             var player = newState.Players
-                .Single(x => string.Equals(x.Color, Player.Color, StringComparison.OrdinalIgnoreCase));
+                .Single(x => string.Equals(x.Color, PlayerColor.Name, StringComparison.OrdinalIgnoreCase));
             player.RollHistory.Add(RollResult.Value);
             return newState;
         }
 
         public override string ToString() =>
-            $"Player {Player.Name} rolls {RollResult.Value} ({RollResult.Die1} + {RollResult.Die2})";
+            $"Player {PlayerColor.Name} rolls {RollResult.Value} ({RollResult.Die1} + {RollResult.Die2})";
     }
 }

@@ -6,5 +6,12 @@ namespace BrickPort.Domain.Models
     {
         public Guid Id { get; }
         public string Name { get; }
+        
+        public Player(string name) : this(Guid.NewGuid(), name) { }
+        public Player(Guid id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
     }
 }

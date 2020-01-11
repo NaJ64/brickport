@@ -16,10 +16,10 @@ namespace BrickPort.Web.DependencyInjection
             configureOptions?.Invoke(webOptions);
             services.AddBrickPortInfrastructure(options =>
             {
-                options.UseInMemoryCommands = true;
-                options.UseInMemoryQueries = true;
-                options.UseDomainCommands = false;
-                options.UseDomainQueries = false;
+                options.UseInMemoryCommands = webOptions.UseInMemoryCommands;
+                options.UseInMemoryQueries = webOptions.UseInMemoryQueries;
+                options.UseDomainCommands = webOptions.UseDomainCommands;
+                options.UseDomainQueries = webOptions.UseDomainQueries;
             });
             return services;
         }

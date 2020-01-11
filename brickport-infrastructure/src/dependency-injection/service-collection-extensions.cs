@@ -1,9 +1,6 @@
 using System;
-using BrickPort.Infrastructure.Services.InMemory;
-using BrickPort.Infrastructure.Services.InMemory.Commands;
-using BrickPort.Infrastructure.Services.InMemory.Queries;
-using BrickPort.Services.Commands;
-using BrickPort.Services.Queries;
+using BrickPort.Infrastructure.Services.Domain.DependencyInjection;
+using BrickPort.Infrastructure.Services.InMemory.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BrickPort.Infrastructure.DependencyInjection
@@ -31,11 +28,11 @@ namespace BrickPort.Infrastructure.DependencyInjection
             // Domain services
             if (infrastructureOptions.UseDomainCommands || infrastructureOptions.UseDomainQueries) 
             {
-                // services.AddBrickPortDomainServices(options => 
-                // {
-                //     options.UseCommands = infrastructureOptions.UseDomainCommands;
-                //     options.UseQueries = infrastructureOptions.UseDomainQueries;
-                // });
+                services.AddBrickPortDomainServices(options => 
+                {
+                    options.UseCommands = infrastructureOptions.UseDomainCommands;
+                    options.UseQueries = infrastructureOptions.UseDomainQueries;
+                });
             }
             
             // In-memory services
@@ -51,22 +48,5 @@ namespace BrickPort.Infrastructure.DependencyInjection
             return services;
         }
 
-        public static IServiceCollection AddBrickPortInMemoryServices(
-            this IServiceCollection services, 
-            Action<IBrickPortInMemoryServiceOptions> configureOptions = null
-        ) 
-        { 
-            // Create new options instance
-            var inMemoryServiceOptions = new BrickPortInMemoryServiceOptions();
-            configureOptions?.Invoke(inMemoryServiceOptions);
-            services.AddSingleton<InMemoryDataStore>();
-            if (inMemoryServiceOptions.UseCommands)
-                services.AddSingleton<ICreateGameHandler, InMemoryCreateGameHandler>();
-            if (inMemoryServiceOptions.UseQueries)
-                services.AddSingleton<IGameQueries, InMemoryGameQueries>();
-            if (inMemoryServiceOptions.UseQueries)
-                services.AddSingleton<IPlayerQueries, InMemoryPlayerQueries>();
-            return services;
-        }
     }
 }

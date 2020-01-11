@@ -17,13 +17,13 @@ namespace BrickPort.Domain.Models.PlayerActions
         {
             var newState = gameState.Clone();
             var player = newState.Players
-                .Single(x => string.Equals(x.Color, Player.Color, StringComparison.OrdinalIgnoreCase));
+                .Single(x => string.Equals(x.Color, PlayerColor.Name, StringComparison.OrdinalIgnoreCase));
             player.RevealedDevelopmentCards.Add(CardType.Name);
             if (CardType.PointValue > 0)
                 player.TotalPoints += CardType.PointValue;
             return newState;
         }
             
-        public override string ToString() => $"Player {Player.Name} plays development card ({CardType.Name})";
+        public override string ToString() => $"Player {PlayerColor.Name} plays development card ({CardType.Name})";
     }
 }

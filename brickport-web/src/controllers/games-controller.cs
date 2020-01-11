@@ -68,7 +68,7 @@ namespace BrickPort.Web.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> PostAsync([FromBody]CreateGameCommand command)
+        public async Task<ActionResult<string>> PostAsync([FromBody]CreateGameCommand command)
         {
             try 
             {

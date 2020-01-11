@@ -15,6 +15,7 @@ namespace BrickPort.Domain.Models
 
         public Game(GameType gameType, IDictionary<PlayerColor, Player> players, IEnumerable<PlayerTurn> turns = null)
         {
+            Id = Guid.NewGuid();
             _gameType = gameType;
             _initialGameState = new GameState() { DevelopmentCards = new List<DevelopmentCard>() };
             foreach (var development in _gameType.Developments)
@@ -28,6 +29,13 @@ namespace BrickPort.Domain.Models
                 if (players.ContainsKey(playerColor) && players[playerColor] != null)
                     _players[playerColor] = players[playerColor];
             }
+            foreach(var playerColor in _players)
+            {
+                _initialGameState.Players.Add(new GameState.PlayerState()
+                {
+                    Color = playerColor.Key.Name
+                });
+            }
             _turns = new Stack<PlayerTurn>(turns?.ToList() ?? new List<PlayerTurn>());
         }
 
@@ -40,6 +48,16 @@ namespace BrickPort.Domain.Models
             }
             return gameState;
         }
+
+        public Player GetPlayer(PlayerColor playerColor) =>
+            _players.ContainsKey(playerColor) ? _players[playerColor] : null;
+
+        public PlayerColor GetPlayerColor(Player player) =>
+            _players.SingleOrDefault(x => x.Value.Id == player.Id).Key;
+
+        public void AddTurn(PlayerTurn turn) => _turns.Push(turn);
+
+        public void UndoTurn() => _turns.Pop();
 
     }
 
@@ -58,6 +76,13 @@ namespace BrickPort.Domain.Models
             public bool HasLargestArmy { get; set; }
             public bool HasLongestRoad { get; set; }
             public int TotalCardsStolen { get; set; }
+
+            public PlayerState()
+            {
+                RollHistory = new List<int>();
+                RevealedDevelopmentCards = new List<string>();
+            }
+            
             public PlayerState Clone() => new PlayerState()            
             {
                 Color = Color,
@@ -75,8 +100,12 @@ namespace BrickPort.Domain.Models
 
         public List<DevelopmentCard> DevelopmentCards { get; set; }
         public List<PlayerState> Players { get; set; }
-
-        // TODO:  Add player points, stats, used cards, etc
+        
+        public GameState()
+        {
+            DevelopmentCards = new List<DevelopmentCard>();
+            Players = new List<PlayerState>();
+        }
 
         public GameState Clone() => new GameState()
         {

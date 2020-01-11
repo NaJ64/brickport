@@ -15,11 +15,11 @@ namespace BrickPort.Domain.Models.PlayerActions
         {
             var newState = gameState.Clone();
             var player = newState.Players
-                .Single(x => string.Equals(x.Color, Player.Color, StringComparison.OrdinalIgnoreCase));
+                .Single(x => string.Equals(x.Color, PlayerColor.Name, StringComparison.OrdinalIgnoreCase));
             player.TotalDevelopmentCards += 1;
             return newState;
         }
             
-        public override string ToString() => $"Player {Player.Name} purchased a development card";
+        public override string ToString() => $"Player {PlayerColor.Name} purchased a development card";
     }
 }

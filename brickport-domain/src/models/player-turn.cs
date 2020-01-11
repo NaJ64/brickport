@@ -13,39 +13,43 @@ namespace BrickPort.Domain.Models
         void Add(IPlayerAction action);
         void Undo();
         GameState Apply(GameState gameState);
-        // TODO:  GameState Revert(GameState gameState);
     }
 
     public class PlayerTurn : IPlayerTurn
     {
         private readonly Stack<IPreRollAction> _preRollActions;
         private IRollAction _rollAction;
-        private readonly Stack<IPlayerAction> _postRollActions;
+        protected readonly Stack<IPlayerAction> _postRollActions;
 
         public Guid Id { get; }
         public PlayerColor Player { get; }
         public RollResult RollResult => _rollAction.RollResult;
         public IReadOnlyList<IPreRollAction> PreRollActions => _preRollActions.ToList();
         public IReadOnlyList<IPlayerAction> PostRollActions => _postRollActions.ToList();
-        public virtual IReadOnlyList<IPlayerAction> Actions => _preRollActions.Cast<IPlayerAction>()
-            .Concat(new IRollAction[] { _rollAction })
-            .Concat(_postRollActions).ToList();
+        public virtual IReadOnlyList<IPlayerAction> Actions
+        {
+            get 
+            {
+                var actions = _preRollActions.Cast<IPlayerAction>();
+                if (_rollAction != null)
+                    actions = actions.Concat(new IRollAction[] { _rollAction });
+                return actions.Concat(_postRollActions).ToList();
+            }
+        } 
 
         public PlayerTurn(
             PlayerColor player, 
             IList<IPreRollAction> preRollActions = null,
             IRollAction roll = null,
-            IList<IPlayerAction> postRollActions = null,
-            bool hasEnded = false
-        ) : this(Guid.NewGuid(), player, preRollActions, roll, postRollActions, hasEnded) { }
+            IList<IPlayerAction> postRollActions = null
+        ) : this(Guid.NewGuid(), player, preRollActions, roll, postRollActions) { }
         
         public PlayerTurn(
             Guid id, 
             PlayerColor player, 
             IList<IPreRollAction> preRollActions = null,
             IRollAction roll = null,
-            IList<IPlayerAction> postRollActions = null,
-            bool hasEnded = false
+            IList<IPlayerAction> postRollActions = null
         ) 
         {
             Id = id;
@@ -70,7 +74,7 @@ namespace BrickPort.Domain.Models
             var cardsPlayed = _preRollActions
                 .Where(x => x is IUseDevelopmentCardAction)
                 .Cast<IUseDevelopmentCardAction>()
-                .Where(x => x.CardType.Equals(cardType) && x.Player.Equals(playerAction.Player))
+                .Where(x => x.CardType.Equals(cardType) && x.PlayerColor.Equals(playerAction.PlayerColor))
                 .Count();
             if (cardsPlayed > cardType.MaxPerTurn)
                 throw new ActionLimitReachedException(playerAction);
@@ -103,9 +107,10 @@ namespace BrickPort.Domain.Models
             }
             if (_rollAction == null) 
             {
-                if (!(playerAction is IPreRollAction))
+                if (playerAction is IPreRollAction)
+                    _preRollActions.Push(playerAction as IPreRollAction);
+                else 
                     throw new InvalidOperationException($"Action ({playerAction.Description}) must be performed after roll");
-                _preRollActions.Push(playerAction as IPreRollAction);
             }
             else
                 _postRollActions.Push(playerAction);
@@ -147,10 +152,10 @@ namespace BrickPort.Domain.Models
         
         public override void Add(IPlayerAction playerAction)
         {
-            if (SpecialBuildPhaseActive && playerAction.Player.Equals(Player))
+            if (SpecialBuildPhaseActive && playerAction.PlayerColor.Equals(Player))
                 throw new SpecialBuildPhaseException(playerAction);
 
-            if (Player.Equals(playerAction.Player))
+            if (Player.Equals(playerAction.PlayerColor))
                 base.Add(playerAction);
             else 
             {
@@ -188,5 +193,32 @@ namespace BrickPort.Domain.Models
     {
         public SpecialBuildPhaseException(IPlayerAction playerAction) 
             : base($"Action ({playerAction.Description}) cannot be performed during the special build phase") { }
+    }
+
+    public class PreGamePlayerTurnException : InvalidOperationException
+    {
+        public PreGamePlayerTurnException(IPlayerAction playerAction) 
+            : base($"Action ({playerAction.Description}) may not be performed before game has started") { }
+    }
+
+    public class PreGamePlayerTurn : PlayerTurn
+    {
+        public PreGamePlayerTurn(PlayerColor player, IList<IPreGameAction> preGameActions = null) 
+            : this(Guid.NewGuid(), player, preGameActions) { }
+        public PreGamePlayerTurn(Guid id, PlayerColor player, IList<IPreGameAction> preGameActions = null) : base(id, player) 
+        { 
+            if (preGameActions?.Any() ?? false)
+            {
+                foreach(var preGameAction in preGameActions) 
+                    Add(preGameAction);
+            }
+        }
+
+        public override void Add(IPlayerAction playerAction)
+        {
+            if (!(playerAction is IPreGameAction))
+                throw new PreGamePlayerTurnException(playerAction);
+            _postRollActions.Push(playerAction as IPreGameAction);
+        }
     }
 }

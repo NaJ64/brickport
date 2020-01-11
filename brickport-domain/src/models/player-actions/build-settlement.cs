@@ -4,7 +4,7 @@ using BrickPort.Domain.Utilities;
 
 namespace BrickPort.Domain.Models.PlayerActions
 {
-    public class BuildSettlement : PlayerAction, IBuildAction
+    public class BuildSettlement : PlayerAction, IBuildAction, IPreGameAction
     {
         public (Tile Tile1, Tile Tile2, Tile Tile3) Location { get; }
         
@@ -12,20 +12,20 @@ namespace BrickPort.Domain.Models.PlayerActions
             : this(Guid.NewGuid(), playerColor, location) { }
 
         public BuildSettlement(Guid id, PlayerColor playerColor, (Tile Tile1, Tile Tile2, Tile Tile3) location) 
-            : base(id, playerColor) => Location = location;
+            : base(id, playerColor, pointValue: 1) => Location = location;
 
         public override GameState Apply(GameState gameState)
         {
             var newState = gameState.Clone();
             var player = newState.Players
-                .Single(x => string.Equals(x.Color, Player.Color, StringComparison.OrdinalIgnoreCase));
+                .Single(x => string.Equals(x.Color, PlayerColor.Name, StringComparison.OrdinalIgnoreCase));
             player.TotalSettlements += 1;
             player.TotalPoints += 1;
             return newState;
         }
             
         public override string ToString() =>
-            $"Player {Player.Name} built settlement on tiles:  " +
+            $"Player {PlayerColor.Name} built settlement on tiles:  " +
             $"{Location.Tile1.ToSummary()}, " +
             $"{Location.Tile2.ToSummary()}, " +
             $"{Location.Tile3.ToSummary()}";

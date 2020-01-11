@@ -7,7 +7,7 @@ namespace BrickPort.Domain.Models.PlayerActions
     public class MoveRobber : TriggeredPlayerAction, ITriggeredAction
     {
         public Tile Location { get; }
-        public PlayerColor StealFromPlayer { get; }
+        public PlayerColor StealFromPlayerColor { get; }
         
         public MoveRobber(
             PlayerColor player, 
@@ -21,18 +21,18 @@ namespace BrickPort.Domain.Models.PlayerActions
             PlayerColor player, 
             ITriggeredAction triggeredBy,
             Tile location, 
-            PlayerColor stealFromPlayer = null
+            PlayerColor stealFromPlayerColor = null
         ) : base(id, player, triggeredBy)
         {
             Location = location;
-            StealFromPlayer = stealFromPlayer;
+            StealFromPlayerColor = stealFromPlayerColor;
         }
 
         public override GameState Apply(GameState gameState)
         {
             var newState = gameState.Clone();
-            var stealFromPlayer = StealFromPlayer == null ? null : newState.Players
-                .Single(x => string.Equals(x.Color, StealFromPlayer.Color, StringComparison.OrdinalIgnoreCase));
+            var stealFromPlayer = StealFromPlayerColor == null ? null : newState.Players
+                .Single(x => string.Equals(x.Color, StealFromPlayerColor.Name, StringComparison.OrdinalIgnoreCase));
             if (stealFromPlayer != null)
                 stealFromPlayer.TotalCardsStolen += 1;
             return newState;
@@ -40,9 +40,9 @@ namespace BrickPort.Domain.Models.PlayerActions
 
         public override string ToString()
         {
-            var description = $"Player {Player.Name} moves robber to {Location.ToSummary()}";
-            if (StealFromPlayer != null)
-                description += $";  Card stolen from {StealFromPlayer.Name}";
+            var description = $"Player {PlayerColor.Name} moves robber to {Location.ToSummary()}";
+            if (StealFromPlayerColor != null)
+                description += $";  Card stolen from {StealFromPlayerColor.Name}";
             return description;
         } 
     }

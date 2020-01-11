@@ -17,16 +17,16 @@ namespace BrickPort.Domain.Models.PlayerActions
         public override GameState Apply(GameState gameState)
         {
             var newState = gameState.Clone();
-            var fromPlayer = FromPlayer == null ? null : newState.Players
-                .Single(x => string.Equals(x.Color, FromPlayer.Color, StringComparison.OrdinalIgnoreCase));
+            var fromPlayer = FromPlayerColor == null ? null : newState.Players
+                .Single(x => string.Equals(x.Color, FromPlayerColor.Color, StringComparison.OrdinalIgnoreCase));
             if (fromPlayer != null)
             {
                 var lostPoints = fromPlayer.HasLargestArmy ? 2 : 0;
                 fromPlayer.HasLargestArmy = false;
                 fromPlayer.TotalPoints -= lostPoints;
             }
-            var toPlayer = Player == null ? null : newState.Players
-                .Single(x => string.Equals(x.Color, Player.Color, StringComparison.OrdinalIgnoreCase));
+            var toPlayer = PlayerColor == null ? null : newState.Players
+                .Single(x => string.Equals(x.Color, PlayerColor.Name, StringComparison.OrdinalIgnoreCase));
             if (toPlayer != null)
             {
                 var gainPoints = toPlayer.HasLargestArmy ? 0 : 2;
@@ -38,10 +38,10 @@ namespace BrickPort.Domain.Models.PlayerActions
         
         public override string ToString()
         {
-            var description = $"Player {Player.Name} awarded {PointValue} point(s) for gaining Largest Army ({NewMax})";
-            if (FromPlayer == null)
+            var description = $"Player {PlayerColor.Name} awarded {PointValue} point(s) for gaining Largest Army ({NewMax})";
+            if (FromPlayerColor == null)
                 return description;
-            return description += $";  Previous leader {FromPlayer} ({OldMax}) loses {PointValue} point(s)";
+            return description += $";  Previous leader {FromPlayerColor} ({OldMax}) loses {PointValue} point(s)";
         } 
     }
 }

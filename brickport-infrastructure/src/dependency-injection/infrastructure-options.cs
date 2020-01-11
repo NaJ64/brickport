@@ -18,8 +18,8 @@ namespace BrickPort.Infrastructure.DependencyInjection
         {
             UseDomainCommands = false;
             UseDomainQueries = false;
-            UseInMemoryCommands = true;
-            UseInMemoryQueries = true;
+            UseInMemoryCommands = false;
+            UseInMemoryQueries = false;
         }
     }
 }

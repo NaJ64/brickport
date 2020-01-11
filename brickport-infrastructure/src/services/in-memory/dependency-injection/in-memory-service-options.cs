@@ -1,4 +1,4 @@
-namespace BrickPort.Infrastructure.DependencyInjection
+namespace BrickPort.Infrastructure.Services.InMemory.DependencyInjection
 {
     public interface IBrickPortInMemoryServiceOptions 
     {

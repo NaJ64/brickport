@@ -12,13 +12,13 @@ namespace BrickPort.Domain.Models.PlayerActions
             : this(Guid.NewGuid(), playerColor, location) { }
 
         public BuildCity(Guid id, PlayerColor playerColor, (Tile Tile1, Tile Tile2, Tile Tile3) location, bool specialBuildPhase = false) 
-            : base(id, playerColor) => Location = location;
+            : base(id, playerColor, pointValue: 1) => Location = location;
 
         public override GameState Apply(GameState gameState)
         {
             var newState = gameState.Clone();
             var player = newState.Players
-                .Single(x => string.Equals(x.Color, Player.Color, StringComparison.OrdinalIgnoreCase));
+                .Single(x => string.Equals(x.Color, PlayerColor.Name, StringComparison.OrdinalIgnoreCase));
             player.TotalCities += 1;
             player.TotalSettlements -= 1;
             player.TotalPoints += 1;
@@ -26,7 +26,7 @@ namespace BrickPort.Domain.Models.PlayerActions
         }
 
         public override string ToString() =>
-            $"Player {Player.Name} built city on tiles:  " +
+            $"Player {PlayerColor.Name} built city on tiles:  " +
             $"{Location.Tile1.ToSummary()}, " +
             $"{Location.Tile2.ToSummary()}, " +
             $"{Location.Tile3.ToSummary()}";

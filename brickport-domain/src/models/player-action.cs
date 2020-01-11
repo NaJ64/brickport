@@ -6,7 +6,7 @@ namespace BrickPort.Domain.Models
     public interface IPlayerAction 
     { 
         int PointValue { get; }
-        PlayerColor Player { get; }
+        PlayerColor PlayerColor { get; }
         string Description { get; }
         GameState Apply(GameState gameState);
     }
@@ -36,20 +36,20 @@ namespace BrickPort.Domain.Models
 
     public interface INewLeaderAction : ITriggeredAction
     { 
-        PlayerColor FromPlayer { get; }
+        PlayerColor FromPlayerColor { get; }
     }
 
     public abstract class PlayerAction : IPlayerAction
     {
         public Guid Id { get; }
-        public PlayerColor Player { get; }
+        public PlayerColor PlayerColor { get; }
         public int PointValue { get; }
         public virtual string Description => this.GetType().Name;
 
-        public PlayerAction(Guid id, PlayerColor player, int pointValue = 0) 
+        public PlayerAction(Guid id, PlayerColor playerColor, int pointValue = 0) 
         {
             Id = id;
-            Player = player;
+            PlayerColor = playerColor;
             PointValue = pointValue;
         }
 
@@ -65,27 +65,27 @@ namespace BrickPort.Domain.Models
 
     public abstract class NewLeaderAction : TriggeredPlayerAction, INewLeaderAction 
     {
-        public PlayerColor FromPlayer { get; }
+        public PlayerColor FromPlayerColor { get; }
         public int? OldMax { get; }
         public int? NewMax { get; }
         
         public NewLeaderAction(
             Guid id, 
-            PlayerColor player, 
+            PlayerColor playerColor, 
             int victoryPoints, 
             IPlayerAction triggeredBy,
             int? newMax,
-            PlayerColor fromPlayer = null, 
+            PlayerColor fromPlayerColor = null, 
             int? oldMax = null
-        ) : base(id, player, triggeredBy, victoryPoints)
+        ) : base(id, playerColor, triggeredBy, victoryPoints)
         {
             if (!newMax.HasValue && !oldMax.HasValue)
                 throw new InvalidOperationException("Lead changes require old max or new max value(s) to be specified");
-            if ((newMax.HasValue && Player == null) || (Player != null && !newMax.HasValue))
+            if ((newMax.HasValue && PlayerColor == null) || (PlayerColor != null && !newMax.HasValue))
                 throw new InvalidOperationException("New player and new max value(s) must both be provided");
-            if ((oldMax.HasValue && fromPlayer == null) || (FromPlayer != null && !oldMax.HasValue))
+            if ((oldMax.HasValue && fromPlayerColor == null) || (FromPlayerColor != null && !oldMax.HasValue))
                 throw new InvalidOperationException("From player and old max value(s) must both be provided");
-            FromPlayer = fromPlayer;
+            FromPlayerColor = fromPlayerColor;
             OldMax = oldMax;
             NewMax = newMax;
         }
