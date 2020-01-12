@@ -87,6 +87,7 @@ namespace BrickPort.Domain.Models
             {
                 Color = Color,
                 RollHistory = RollHistory.ToList(),
+                TotalPoints = TotalPoints,
                 TotalRoads = TotalRoads,
                 TotalSettlements = TotalSettlements,
                 TotalCities = TotalCities,
