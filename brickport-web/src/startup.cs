@@ -33,18 +33,12 @@ namespace BrickPort.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
-
             app.UseRouting();
-
+            app.UseDefaultFiles();
             app.UseStaticFiles();
-
-            // Register the Swagger generator and the Swagger UI middlewares
             app.UseOpenApi();
             app.UseSwaggerUi3();
-
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
