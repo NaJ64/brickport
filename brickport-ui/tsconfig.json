@@ -15,6 +15,7 @@
   },
   "exclude": [
     "node_modules",
+    "dist",
     "babel.config.js",
     "quasar.conf.js"
   ]

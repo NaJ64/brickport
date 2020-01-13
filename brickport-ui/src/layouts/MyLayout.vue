@@ -25,7 +25,7 @@
       bordered
       content-class="bg-accent"
     >
-      <q-list>
+      <q-list class="text-dark">
         <q-item-label header>Essential Links</q-item-label>
         <q-item clickable tag="a" target="_blank" href="https://quasar.dev">
           <q-item-section avatar>

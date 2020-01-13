@@ -14,4 +14,13 @@
     <RootNamespace>BrickPort.Web</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <BrickPortUI Include="..\brickport-ui\dist\spa\**\*.*" />
+  </ItemGroup>
+
+  <Target Name="brickport-ui" BeforeTargets="AfterBuild">
+    <Copy SourceFiles="@(BrickPortUI)"
+      DestinationFiles="@(BrickPortUI->'.\wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+
 </Project>
