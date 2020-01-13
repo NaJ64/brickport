@@ -6,7 +6,7 @@
           flat
           dense
           round
-          @click="leftDrawerOpen = !leftDrawerOpen"
+          @click="store.toggleLeftDrawer()"
           icon="menu"
           aria-label="Menu"
         />
@@ -93,9 +93,19 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import { getModule } from 'vuex-module-decorators';
+import LayoutStoreModule from './LayoutStoreModule';
 
 @Component
 export default class MyLayout extends Vue {
-  leftDrawerOpen = false;
+  store = getModule(LayoutStoreModule);
+
+  get leftDrawerOpen() {
+    return this.store.leftDrawerOpen;
+  }
+
+  set leftDrawerOpen(value: boolean) {
+    this.store.setLeftDrawerOpen(value);
+  }
 }
 </script>
