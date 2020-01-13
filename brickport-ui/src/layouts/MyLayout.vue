@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
-      <q-toolbar>
+      <q-toolbar class="bg-dark">
         <q-btn
           flat
           dense
@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          BrickPort
         </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
@@ -23,7 +23,7 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      content-class="bg-grey-2"
+      content-class="bg-accent"
     >
       <q-list>
         <q-item-label header>Essential Links</q-item-label>
