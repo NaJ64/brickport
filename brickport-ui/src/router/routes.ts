@@ -6,8 +6,10 @@ const routes: RouteConfig[] = [
     component: () => import('layouts/MyLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Index.vue') },
+      { path: 'games', component: () => import('pages/Games.vue') },
+      { path: 'players', component: () => import('pages/Players.vue') },
     ],
-  },
+  }
 ];
 
 // Always leave this as last one

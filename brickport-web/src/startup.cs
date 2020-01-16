@@ -18,7 +18,8 @@ namespace BrickPort.Web
         public void ConfigureServices(IServiceCollection services) => services
             .AddBrickPortWeb(options => 
             {
-                options.UseDomainCommands = true;
+                //options.UseDomainCommands = true;
+                options.UseInMemoryCommands = true;
                 options.UseInMemoryQueries = true;
             })
             .AddSwaggerDocument(configure => 
