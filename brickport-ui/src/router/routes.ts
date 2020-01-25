@@ -3,11 +3,11 @@ import { RouteConfig } from 'vue-router'
 const routes: RouteConfig[] = [
   {
     path: '/',
-    component: () => import('layouts/MyLayout.vue'),
+    component: () => import('layouts/my-layout.vue'),
     children: [
-      { path: '', component: () => import('pages/Index.vue') },
-      { path: 'games', component: () => import('pages/Games.vue') },
-      { path: 'players', component: () => import('pages/Players.vue') },
+      { path: '', component: () => import('pages/index.vue') },
+      { path: 'games', component: () => import('pages/games.vue') },
+      { path: 'players', component: () => import('pages/players.vue') },
     ],
   }
 ];
@@ -16,7 +16,7 @@ const routes: RouteConfig[] = [
 if (process.env.MODE !== 'ssr') {
   routes.push({
     path: '*',
-    component: () => import('pages/Error404.vue'),
+    component: () => import('pages/error-404.vue'),
   });
 }
 

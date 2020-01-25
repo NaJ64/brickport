@@ -11,19 +11,22 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { BrickportApiClient } from '../infrastructure/brickport-services/brickport-services-api/api-client';
+import { getModule } from 'vuex-module-decorators';
+import BrickportServicesStoreModule from '../infrastructure/brickport-services/brickport-services-store-module';
 import { IGameSummary } from '../brickport-services/queries/game-queries';
 
 @Component
 export default class PageGames extends Vue {
-
-  private games: IGameSummary[] = [];
+  
+  private readonly store = getModule(BrickportServicesStoreModule);
 
   constructor() {
     super();
-    const apiClient = new BrickportApiClient(window.location.origin + '/api/games', true);
-    apiClient.get<IGameSummary[]>()
-      .then(games => games.forEach(game => this.games.push(game)))
+    this.store.fetchGamesAsync();
+  }
+
+  get games(): IGameSummary[] {
+    return this.store.gameSummaries;
   }
 
 }
