@@ -1,6 +1,10 @@
 <template>
   <q-page class="bg-primary flex flex-center">
-      Players
+    <ul id="example-1">
+      <li v-for="player in players" v-bind:key="player.id">
+        {{ JSON.stringify(player) }}
+      </li>
+    </ul>
   </q-page>
 </template>
 
@@ -9,7 +13,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { getModule } from 'vuex-module-decorators';
 import { IPlayer } from '../brickport-services/queries/player-queries';
-import BrickportServicesStoreModule from '../infrastructure/brickport-services/brickport-services-store-module';
+import BrickportServicesStoreModule from '../store/modules/brickport-services';
 
 @Component
 export default class PagePlayers extends Vue { 

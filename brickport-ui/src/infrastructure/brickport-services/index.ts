@@ -1,2 +1,2 @@
-export * from "./brickport-services-api";
-export * from "./brickport-services-local";
+export * from "./api";
+export * from "./local";

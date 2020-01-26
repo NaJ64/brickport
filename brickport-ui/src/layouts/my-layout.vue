@@ -94,7 +94,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { getModule } from 'vuex-module-decorators';
-import LayoutStoreModule from './layout-store-module';
+import LayoutStoreModule from '../store/modules/layout';
 
 @Component
 export default class MyLayout extends Vue {
@@ -108,5 +108,6 @@ export default class MyLayout extends Vue {
   set leftDrawerOpen(value: boolean) {
     this.store.setLeftDrawerOpen(value);
   }
+  
 }
 </script>

@@ -12,8 +12,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { getModule } from 'vuex-module-decorators';
-import BrickportServicesStoreModule from '../infrastructure/brickport-services/brickport-services-store-module';
 import { IGameSummary } from '../brickport-services/queries/game-queries';
+import BrickportServicesStoreModule from '../store/modules/brickport-services';
 
 @Component
 export default class PageGames extends Vue {

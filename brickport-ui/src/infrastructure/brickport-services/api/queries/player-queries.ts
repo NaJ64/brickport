@@ -13,9 +13,9 @@ export class ApiPlayerQueries implements IPlayerQueries {
     getAsync(id: string): Promise<IPlayer>;
     getAsync(id?: any): Promise<IPlayer | IPlayer[]> {
         if (id == null) {
-            return this._apiClient.get(`/${id}`);
+            return this._apiClient.get();
         }
-        return this._apiClient.get();
+        return this._apiClient.get(`/${id}`);
     }
     
 }
