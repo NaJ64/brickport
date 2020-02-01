@@ -49,19 +49,26 @@ module.exports = function (ctx) {
       all: false,
 
       components: [
-        'QLayout',
-        'QHeader',
-        'QDrawer',
-        'QPageContainer',
-        'QPage',
-        'QToolbar',
-        'QToolbarTitle',
+        'QAvatar',
         'QBtn',
+        'QBtnDropdown',
+        'QDrawer',
+        'QHeader',
         'QIcon',
-        'QList',
         'QItem',
         'QItemSection',
-        'QItemLabel'
+        'QItemLabel',
+        'QLayout',
+        'QList',
+        'QPageContainer',
+        'QPage',
+        'QSeparator',
+        'QSpace',
+        'QTabs',
+        'QTab',
+        'QRouteTab',
+        'QToolbar',
+        'QToolbarTitle'
       ],
 
       directives: [
