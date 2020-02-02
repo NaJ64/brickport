@@ -1,10 +1,15 @@
 <template>
   <q-page class="bg-primary flex flex-center">
-    <ul id="example-1">
-      <li v-for="game in games" v-bind:key="game.id">
-        {{ JSON.stringify(game) }}
-      </li>
-    </ul>
+    <div v-if="!!selectedGame">
+      <ul>
+        <li>
+          {{ JSON.stringify(selectedGame) }}
+        </li>
+      </ul>
+    </div>
+    <div v-if="!selectedGame && newGame">
+      <span>Create New Game</span>
+    </div>
   </q-page>
 </template>
 
@@ -12,22 +17,43 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { getModule } from 'vuex-module-decorators';
+import { Watch } from 'vue-property-decorator';
+import { ICreateGameCommand } from '../brickport-services/commands/create-game';
 import { IGameSummary } from '../brickport-services/queries/game-queries';
 import BrickportServicesStoreModule from '../store/modules/brickport-services';
 
 @Component
 export default class PageGames extends Vue {
-  
+
+  private static readonly isNew = (id: string) => id && !!~["new", "add", "create"].indexOf(id);
   private readonly store = getModule(BrickportServicesStoreModule);
 
-  constructor() {
-    super();
-    this.store.fetchGamesAsync();
+  get selectedGame(): IGameSummary | null {
+    return this.store.selectedGame;
   }
 
-  get games(): IGameSummary[] {
-    return this.store.gameSummaries;
+  get newGame(): ICreateGameCommand | null {
+    return this.store.newGame;
   }
+
+  created() {
+    this.onRouteChanged();
+  }
+
+  @Watch("$route")
+  private onRouteChanged() {
+    const id = this.$route.params['id'] || null;
+    if (!id) {
+      this.store.clearSelectedGame();
+      return;
+    }
+    if (PageGames.isNew(id)) {
+      this.store.startNewGame();
+    } else {
+      this.store.fetchSelectedGameAsync(id);
+    }
+  }
+  
 
 }
 </script>
