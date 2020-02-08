@@ -13,9 +13,12 @@ namespace BrickPort.Web
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        private const string _devCorsPolicy = "_devCorsPolicy";
         public void ConfigureServices(IServiceCollection services) => services
+            .AddCors(options => options.AddPolicy(_devCorsPolicy, builder => builder.WithOrigins(
+                "http://localhost:8080",
+                "https://localhost:8081"
+            )))
             .AddBrickPortWeb(options => 
             {
                 //options.UseDomainCommands = true;
@@ -30,11 +33,13 @@ namespace BrickPort.Web
             })
             .AddControllers(); // Register the Swagger services
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment()) 
+            {
                 app.UseDeveloperExceptionPage();
+                app.UseCors(_devCorsPolicy);
+            }
             app.UseRouting();
             app.UseDefaultFiles();
             app.UseStaticFiles();

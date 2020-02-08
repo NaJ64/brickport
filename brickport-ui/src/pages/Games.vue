@@ -8,7 +8,7 @@
       </ul>
     </div>
     <div v-if="!selectedGame && newGame">
-      <span>Create New Game</span>
+      <create-new-game></create-new-game>
     </div>
   </q-page>
 </template>
@@ -21,12 +21,20 @@ import { Watch } from 'vue-property-decorator';
 import { ICreateGameCommand } from '../brickport-services/commands/create-game';
 import { IGameSummary } from '../brickport-services/queries/game-queries';
 import BrickportServicesStoreModule from '../store/modules/brickport-services';
+import CreateNewGame from '../components/create-new-game.vue';
 
-@Component
-export default class PageGames extends Vue {
+@Component({
+  components: {
+    'create-new-game': CreateNewGame
+  }
+})
+export default class Games extends Vue {
 
-  private static readonly isNew = (id: string) => id && !!~["new", "add", "create"].indexOf(id);
   private readonly store = getModule(BrickportServicesStoreModule);
+
+  private static isNew(id: string) {
+    return id && !!~['new', 'add', 'create'].indexOf(id);
+  }
 
   get selectedGame(): IGameSummary | null {
     return this.store.selectedGame;
@@ -40,20 +48,19 @@ export default class PageGames extends Vue {
     this.onRouteChanged();
   }
 
-  @Watch("$route")
+  @Watch('$route')
   private onRouteChanged() {
     const id = this.$route.params['id'] || null;
     if (!id) {
       this.store.clearSelectedGame();
       return;
     }
-    if (PageGames.isNew(id)) {
+    if (Games.isNew(id)) {
       this.store.startNewGame();
     } else {
       this.store.fetchSelectedGameAsync(id);
     }
   }
   
-
 }
 </script>

@@ -53,8 +53,10 @@ module.exports = function (ctx) {
         'QBtn',
         'QBtnDropdown',
         'QDrawer',
+        'QForm',
         'QHeader',
         'QIcon',
+        'QInput',
         'QItem',
         'QItemSection',
         'QItemLabel',
@@ -66,6 +68,7 @@ module.exports = function (ctx) {
         'QSpace',
         'QTabs',
         'QTab',
+        'QToggle',
         'QRouteTab',
         'QToolbar',
         'QToolbarTitle'

@@ -5,6 +5,7 @@ import { ApiGameQueries } from "../../infrastructure/brickport-services/api/quer
 import { ApiPlayerQueries } from "../../infrastructure/brickport-services/api/queries/player-queries";
 import Store from '../index';
 import { ICreateGameCommand } from "src/brickport-services";
+import { Module as IModule } from "vuex";
 
 export const SET_RECENT_GAMES = 'SET_RECENT_GAMES';
 export const SET_SEARCHED_GAMES = 'SET_SEARCHED_GAMES';
@@ -21,8 +22,8 @@ export const SET_NEW_GAME = 'SET_NEW_GAME';
 export default class BrickportServicesStoreModule extends VuexModule {
 
   private readonly _endpoint: string = `${window.location.origin}/api`;
-  private readonly _gameQueries: IGameQueries = new ApiGameQueries(`${this._endpoint}/games`);
-  private readonly _playerQueries: IPlayerQueries = new ApiPlayerQueries(`${this._endpoint}/players`)
+  private readonly _gameQueries: IGameQueries;
+  private readonly _playerQueries: IPlayerQueries;
 
   public recentGames: IGameSummary[] = [];
   public searchedGames: IGameSummary[] = [];
@@ -30,6 +31,13 @@ export default class BrickportServicesStoreModule extends VuexModule {
   public newGame: ICreateGameCommand | null = null;
 
   public players: IPlayer[] = [];
+
+  public constructor(module: IModule<ThisType<any>,any>) {
+    super(module);
+    this._endpoint = `https://localhost:5001/api`;
+    this._gameQueries = new ApiGameQueries(`${this._endpoint}/games`);
+    this._playerQueries = new ApiPlayerQueries(`${this._endpoint}/players`)
+  }
 
   @Action({ commit: SET_RECENT_GAMES })
   public async fetchRecentGamesAsync() {

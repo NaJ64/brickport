@@ -16,7 +16,7 @@ import { IPlayer } from '../brickport-services/queries/player-queries';
 import BrickportServicesStoreModule from '../store/modules/brickport-services';
 
 @Component
-export default class PagePlayers extends Vue { 
+export default class Players extends Vue { 
 
   private readonly store = getModule(BrickportServicesStoreModule);
 
