@@ -64,6 +64,7 @@ module.exports = function (ctx) {
         'QList',
         'QPageContainer',
         'QPage',
+        'QSelect',
         'QSeparator',
         'QSpace',
         'QTabs',

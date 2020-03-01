@@ -2,6 +2,7 @@ export interface IGameSummary {
     id: string | null;
     dateUtc: string;
     winner: string | null;
+    inProgress: boolean;
     playerScores: IPlayerScoreSummary[];
 }
 
@@ -16,6 +17,7 @@ export class GameSummary implements IGameSummary {
     id!: string | null;
     dateUtc!: string;
     winner!: string | null;
+    inProgress!: boolean;
     playerScores!: IPlayerScoreSummary[];
     constructor(state?: IGameSummary) {
         if (state) {
@@ -24,6 +26,7 @@ export class GameSummary implements IGameSummary {
         this.id = this.id || null;
         this.dateUtc = this.dateUtc || new Date().toISOString();
         this.winner = this.winner || null;
+        this.inProgress = this.inProgress || false;
         this.playerScores = this.playerScores || [];
     }
 }

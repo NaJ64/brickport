@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace BrickPort.Domain.Models.PlayerActions
 {
-    public class BuildRoad : PlayerAction, IBuildAction
+    public class BuildRoad : PlayerAction, IBuildAction, IPreGameAction
     {
         public BuildRoad(PlayerColor playerColor) 
             : this(Guid.NewGuid(), playerColor) { }

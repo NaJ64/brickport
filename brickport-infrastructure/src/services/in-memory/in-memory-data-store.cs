@@ -79,6 +79,7 @@ namespace BrickPort.Infrastructure.Services.InMemory
                     Id = Guid.NewGuid().ToString(),
                     DateUtc = DateTime.UtcNow,
                     Winner = drewBrees.PlayerName,
+                    InProgress = false,
                     PlayerScores = new PlayerScoreSummary[]
                     {
                         new PlayerScoreSummary()
@@ -116,6 +117,7 @@ namespace BrickPort.Infrastructure.Services.InMemory
                     Id = Guid.NewGuid().ToString(),
                     DateUtc = DateTime.UtcNow.AddDays(1),
                     Winner = pierreThomas.PlayerName,
+                    InProgress = false,
                     PlayerScores = new PlayerScoreSummary[]
                     {
                         new PlayerScoreSummary()

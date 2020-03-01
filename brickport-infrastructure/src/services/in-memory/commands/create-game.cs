@@ -29,6 +29,7 @@ namespace BrickPort.Infrastructure.Services.InMemory.Commands
                 Id = Guid.NewGuid().ToString(),
                 DateUtc = command.DateUtc,
                 Winner = null,
+                InProgress = true,
                 PlayerScores = command.Players.Select(x => new PlayerScoreSummary()
                 {
                     PlayerId = _dataStore.GetPlayerId(x.PlayerName) ?? _dataStore.AddNewPlayer(x.PlayerName),

@@ -9,6 +9,7 @@ namespace BrickPort.Services.Queries
         public string Id { get; set; }
         public DateTime DateUtc { get; set; }
         public string Winner { get; set; }
+        public bool InProgress { get; set; }
         public PlayerScoreSummary[] PlayerScores { get; set; }
     }
 

@@ -15,14 +15,15 @@ namespace BrickPort.Web
     {
         private const string _devCorsPolicy = "_devCorsPolicy";
         public void ConfigureServices(IServiceCollection services) => services
-            .AddCors(options => options.AddPolicy(_devCorsPolicy, builder => builder.WithOrigins(
-                "http://localhost:8080",
-                "https://localhost:8081"
-            )))
+            .AddCors(options => options.AddPolicy(_devCorsPolicy, builder => builder
+                .WithOrigins("http://localhost:8080", "https://localhost:8081")
+                .AllowAnyHeader()
+                .WithMethods("GET", "POST", "OPTIONS")
+            ))
             .AddBrickPortWeb(options => 
             {
-                //options.UseDomainCommands = true;
-                options.UseInMemoryCommands = true;
+                options.UseDomainCommands = true;
+                //options.UseInMemoryCommands = true;
                 options.UseInMemoryQueries = true;
             })
             .AddSwaggerDocument(configure => 

@@ -35,24 +35,43 @@ export class BrickportApiClient {
         return this._log.map(x => [x.timestamp, this.logEntryToText(x)]);
     }
 
-    async get<TResponse>(address?: string): Promise<TResponse> {
+    private fixAddress(address?: string): string {
         if (!address) {
             address = "";
         }
         if (address.length && address.substr(0,1) !== "/") {
             address = "/" + address;
         }
+        return address;
+    }
+
+    async get<TResponse>(address?: string): Promise<TResponse> {
+        address = this.fixAddress(address);
         const url = `${this._endpoint}${address}`;
         this.logMessage(url, 'GET', 'request')
         try {
             const response = await axios.get<TResponse>(url);
             this.logMessage(url, 'GET', 'response', JSON.stringify(response.data));
             return response.data;
-        }
-        catch (error) {
+        } catch (error) {
             this.logMessage(url, 'GET', 'error', (<AxiosError>error).message);
             throw error;
         }
+    }
+
+    async post<TResponse = any>(data?: any, address?: string): Promise<TResponse> {
+        address = this.fixAddress(address);
+        const url = `${this._endpoint}${address}`;
+        this.logMessage(url, 'POST', 'request', JSON.stringify(data));
+        try {
+            const response = await axios.post<TResponse>(url, data || undefined);
+            this.logMessage(url, 'POST', 'response', JSON.stringify(response.data));
+            return response.data;
+        } catch (error) {
+            this.logMessage(url, 'POST', 'error', (<AxiosError>error).message);
+            throw error;
+        }
+
     }
 
 }

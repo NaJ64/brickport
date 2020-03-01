@@ -1,14 +1,15 @@
 <template>
   <q-page class="bg-primary flex flex-center">
     <div v-if="!!selectedGame">
-      <ul>
-        <li>
-          {{ JSON.stringify(selectedGame) }}
-        </li>
-      </ul>
+      <div v-if="selectedGame.inProgress">
+        <edit-game></edit-game>
+      </div>
+      <div v-if="!selectedGame.inProgress">
+        <game-details></game-details>
+      </div>
     </div>
     <div v-if="!selectedGame && newGame">
-      <create-new-game></create-new-game>
+      <create-game></create-game>
     </div>
   </q-page>
 </template>
@@ -21,11 +22,15 @@ import { Watch } from 'vue-property-decorator';
 import { ICreateGameCommand } from '../brickport-services/commands/create-game';
 import { IGameSummary } from '../brickport-services/queries/game-queries';
 import BrickportServicesStoreModule from '../store/modules/brickport-services';
-import CreateNewGame from '../components/create-new-game.vue';
+import CreateGame from '../components/create-game.vue';
+import EditGame from '../components/edit-game.vue';
+import GameDetails from '../components/game-details.vue';
 
 @Component({
   components: {
-    'create-new-game': CreateNewGame
+    'create-game': CreateGame,
+    'edit-game': EditGame,
+    'game-details': GameDetails
   }
 })
 export default class Games extends Vue {

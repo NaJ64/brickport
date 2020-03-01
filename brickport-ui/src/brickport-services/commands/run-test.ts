@@ -15,4 +15,4 @@ export class RunTestCommand implements ICommand {
     }
 }
 
-export interface IRunTestHandler extends ICommandHandler<RunTestCommand> { }
+export interface IRunTestHandler extends ICommandHandler<IRunTestCommand> { }
