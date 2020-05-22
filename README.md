@@ -14,7 +14,7 @@
 ---
 
 ### Building Node.js / NPM projects:
-Node.js package `quasar` CLI is required for managing the front-end project(s).
+Node.js package `@quasar/cli` CLI is required for managing the front-end project(s).
 
 1. Run the following (one time) to install the package globally:
 
