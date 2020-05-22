@@ -18,7 +18,7 @@ Node.js package `quasar` CLI is required for managing the front-end project(s).
 
 1. Run the following (one time) to install the package globally:
 
-        npm install -g quasar
+        npm install -g @quasar/cli
 
 2. Run the following to install all dependencies within the `brickport-ui` directory
 
