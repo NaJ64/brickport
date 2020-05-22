@@ -19,8 +19,6 @@ Node.js package `@quasar/cli` CLI is required for managing the front-end project
 1. Run the following (one time) to install the package globally:
 
         npm install -g @quasar/cli
-        
-   Note:  You may also need to run `npm --add-python-to-path='true' --debug install --global windows-build-tools` if you encounter build issues regarding checking for "python2" in the PATH
 
 2. Run the following to install all dependencies within the `brickport-ui` directory
 
